@@ -16,12 +16,30 @@ class ViewController: UIViewController {
     @IBOutlet weak var tipRateControl: UISegmentedControl!
     @IBOutlet weak var bottomLayoutConstraint: NSLayoutConstraint!
     
+    var model = TipCalcViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        title = "Tippsy the Tip Calculator"
+        // TBD: this however is not visible - why?
         
-        // this layout constraint controls an invisible view that allows space for the keyboard
-        bottomLayoutConstraint.constant = 0 // testing!
+        // this layout constraint controls an invisible spacer view that allows space for the keyboard
+        bottomLayoutConstraint.constant = 0
+
+        // set some rates into the view model (later will use storage defaults)
+        let defaultRates = [0.15, 0.20, 0.22]
+        model.setRates(defaultRates)
+        
+        // set the default rate index (later will use storage defaults)
+        model.defaultRateIndex = 0
+        
+        // also set up the initial bill (later will use storage defaults)
+        model.billAmount = "$10.00"
+        
+        // update the view
+        refresh()
+
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -39,6 +57,26 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    private func refreshRates() {
+        // configure the tip control with rates from the view model
+        let rateStrings = model.getRateStrings()
+        tipRateControl.removeAllSegments()
+        for (index, rate) in rateStrings.enumerate() {
+            tipRateControl.insertSegmentWithTitle(rate, atIndex: index, animated: false)
+        }
+        tipRateControl.selectedSegmentIndex = model.defaultRateIndex
+    }
+    
+    private func refreshAmounts() {
+        billAmountField.text = model.billAmount
+        tipField.text = model.tipAmount
+        totalField.text = model.totalAmount
+    }
+    
+    func refresh() {
+        refreshRates()
+        refreshAmounts()
+    }
 
 }
 
