@@ -34,18 +34,23 @@ struct TipCalculator {
     let rates : [Double]
     let currentRateIndex: Int
 
-    init(rates r: [Double] = [0.2], currentIndex idx:Int = 0) {
-        rates = r
-        currentRateIndex = idx
+    init?(rates r: [Double] = [0.2], currentIndex idx:Int = 0) {
+        let range = 0..<r.count
+        if range.contains(idx) {
+            rates = r
+            currentRateIndex = idx
+            return
+        }
+        return nil
     }
 
     /// just change the rates
-    func newRates(rates r: [Double]) -> TipCalculator {
+    func newRates(r: [Double]) -> TipCalculator? {
         return TipCalculator(rates: r, currentIndex: currentRateIndex)
     }
 
     /// just change the default index
-    func newDefault(index: Int) -> TipCalculator {
+    func newDefault(index: Int) -> TipCalculator? {
         return TipCalculator(rates: rates, currentIndex: index)
     }
 

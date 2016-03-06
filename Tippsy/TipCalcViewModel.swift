@@ -20,10 +20,10 @@ class TipCalcViewModel {
         }
         
         set{
-            guard newValue >= 0 && newValue < model.rates.count else {
+            guard let newModel = model.newDefault(newValue) else {
                 return
             }
-            model = model.newDefault(newValue)
+            model = newModel
             currentTip = model.calculate(currentTip.baseAmount)
         }
     }
@@ -53,7 +53,9 @@ class TipCalcViewModel {
     }
     
     init(bill: Double = 0.0) {
-        model = TipCalculator(rates: [0.15, 0.20, 0.25], currentIndex: 0)
+        // NOTE: it is safe to force unwrap the optional since the default model is consistent
+        // CONVERSE: if default model is inconsistent, the app will crash
+        model = TipCalculator(rates: [0.15, 0.20, 0.25], currentIndex: 0)!
         currentTip = model.calculate(bill)
     }
     
@@ -62,7 +64,8 @@ class TipCalcViewModel {
     }
     
     func setRates(rates: [Double]) {
-        model = model.newRates(rates: rates)
+        guard let newmodel = model.newRates(rates) else { return }
+        model = newmodel
     }
     
     func getRateStrings() -> [String] {
