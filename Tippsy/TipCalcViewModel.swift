@@ -34,9 +34,10 @@ class TipCalcViewModel {
         }
         set {
             // parse new value from typical output string (gathered as input)
-            let newBase = parseCurrency(newValue)
-            // if successful, get a new currentTip using the new base amount and default rate
-            currentTip = model.calculate(newBase)
+            if let newBase = parseCurrency(newValue) {
+                // if successful, get a new currentTip using the new base amount and default rate
+                currentTip = model.calculate(newBase)
+            }
         }
     }
     
@@ -50,6 +51,25 @@ class TipCalcViewModel {
         get {
             return formatAsCurrency(currentTip.total)
         }
+    }
+    
+    func isAllowableForEditing(input: String) -> Bool  {
+        /* DISCUSSION
+        We actually want to prevent the case of a blank field when editing currency, since the
+        ViewModel can only convert from currency output back to double.
+        
+        Alternatively, we could implement changes during editing mode such that all strings are allowed, but then we have the issue of any call to refreshAmounts() (such as from changing the rate while editing) can cause it to redisplay the current amount as edited.
+        
+        Is this really a problem? There is probably some better way I'm missing at the moment.
+        */
+        // first, check if the string is parseable as currency
+        // if ok, then it passes
+        let parsed = parseCurrency(input)
+        if parsed != nil {
+            return true
+        }
+        // if not, it must be equal to the currency symbol by itself in order to pass
+        return fmt.currencySymbol == input
     }
     
     init(bill: Double = 0.0) {
@@ -88,9 +108,9 @@ class TipCalcViewModel {
         return result
     }
     
-    func parseCurrency(input: String) -> Double {
+    func parseCurrency(input: String) -> Double? {
         fmt.configureForCurrency()
-        let result = fmt.numberFromString(input)?.doubleValue ?? 0.00
+        let result = fmt.numberFromString(input)?.doubleValue
         return result
     }
 }

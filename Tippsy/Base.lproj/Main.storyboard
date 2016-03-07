@@ -52,7 +52,11 @@
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" text="$100.00" borderStyle="roundedRect" placeholder="Bill amount" textAlignment="right" minimumFontSize="32" translatesAutoresizingMaskIntoConstraints="NO" id="Dfj-xQ-TJe">
                                 <rect key="frame" x="401" y="69" width="179" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="32"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
+                                <connections>
+                                    <action selector="onEditBillAmount:" destination="BYZ-38-t0r" eventType="editingChanged" id="903-gZ-g1R"/>
+                                    <action selector="onEditingBillEnded:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="fG6-Ys-XNj"/>
+                                </connections>
                             </textField>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pSq-ac-63Y">
                                 <rect key="frame" x="20" y="281" width="560" height="15"/>
@@ -69,6 +73,9 @@
                                     <segment title="20%"/>
                                     <segment title="25%"/>
                                 </segments>
+                                <connections>
+                                    <action selector="onRateChange:" destination="BYZ-38-t0r" eventType="valueChanged" id="ZNX-eU-R7f"/>
+                                </connections>
                             </segmentedControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t0j-YM-fUM" userLabel="KeyboardGuide">
                                 <rect key="frame" x="20" y="592" width="560" height="0.0"/>
@@ -79,6 +86,7 @@
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="t0j-YM-fUM" firstAttribute="top" secondItem="5Fn-wR-uzs" secondAttribute="bottom" multiplier="6:4" id="5GH-ju-P0f"/>
                             <constraint firstItem="UXs-k8-G9o" firstAttribute="baseline" secondItem="aGB-e8-qdZ" secondAttribute="baseline" id="65b-wQ-EdT"/>
@@ -102,6 +110,9 @@
                             <constraint firstAttribute="trailing" secondItem="t0j-YM-fUM" secondAttribute="trailing" constant="20" symbolic="YES" id="w6s-fb-SNn"/>
                             <constraint firstItem="pSq-ac-63Y" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" symbolic="YES" id="yLE-K8-ank"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="Oom-ty-XyM" appends="YES" id="qOW-zb-pkU"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="billAmountField" destination="Dfj-xQ-TJe" id="YO1-0l-OiW"/>
@@ -112,6 +123,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="Oom-ty-XyM">
+                    <connections>
+                        <action selector="onTap:" destination="BYZ-38-t0r" id="kK9-fY-X3E"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="564" y="489"/>
         </scene>

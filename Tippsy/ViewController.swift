@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var billAmountField: UITextField!
     @IBOutlet weak var tipField: UILabel!
@@ -20,9 +20,14 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        billAmountField.delegate = self
+        
         // Do any additional setup after loading the view, typically from a nib.
         title = "Tippsy the Tip Calculator"
-        // TBD: this however is not visible - why?
+        // BUG#1: this however is not visible - why?
+        // Solution#1 - embed in NavigationController; title then is visible.
+        //   BUG #2: This causes problems with the autolayout, where the field disappears under the title bar. We need a way to
         
         // this layout constraint controls an invisible spacer view that allows space for the keyboard
         bottomLayoutConstraint.constant = 0
@@ -38,7 +43,7 @@ class ViewController: UIViewController {
         model.billAmount = "$10.00"
         
         // update the view
-        refresh()
+        refreshRates()
 
     }
     
@@ -57,6 +62,38 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    // MARK: UI events
+    @IBAction func onTap(sender: AnyObject) {
+        view.endEditing(true)
+    }
+    
+    @IBAction func onEditBillAmount(sender: AnyObject) {
+        let currentBill = billAmountField.text!
+        model.billAmount = currentBill
+    }
+    
+    @IBAction func onEditingBillEnded(sender: AnyObject) {
+        refreshAmounts()
+    }
+    
+    @IBAction func onRateChange(sender: AnyObject) {
+        let currentRateIndex = tipRateControl.selectedSegmentIndex
+        model.defaultRateIndex = currentRateIndex
+        refreshCurrentRate()
+    }
+
+    // MARK: TextFieldDelegate
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        if let text: NSString = textField.text where textField === billAmountField {
+            // apply the suggested change first
+            let newtext = text.stringByReplacingCharactersInRange(range, withString: string)
+            // prevent deleting the currency symbol during editing
+            return model.isAllowableForEditing(newtext)
+        }
+        return true
+    }
+    
+    // MARK: refresh utilities
     private func refreshRates() {
         // configure the tip control with rates from the view model
         let rateStrings = model.getRateStrings()
@@ -64,18 +101,20 @@ class ViewController: UIViewController {
         for (index, rate) in rateStrings.enumerate() {
             tipRateControl.insertSegmentWithTitle(rate, atIndex: index, animated: false)
         }
+        // also requires refreshing the current rate shown
+        refreshCurrentRate()
+    }
+    
+    private func refreshCurrentRate() {
         tipRateControl.selectedSegmentIndex = model.defaultRateIndex
+        // also requires updating the amounts shown
+        refreshAmounts()
     }
     
     private func refreshAmounts() {
         billAmountField.text = model.billAmount
         tipField.text = model.tipAmount
         totalField.text = model.totalAmount
-    }
-    
-    func refresh() {
-        refreshRates()
-        refreshAmounts()
     }
 
 }
