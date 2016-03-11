@@ -16,6 +16,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var tipRateControl: UISegmentedControl!
     @IBOutlet weak var bottomLayoutConstraint: NSLayoutConstraint!
     
+    @IBOutlet var screenElements: [UILabel]!
+    @IBOutlet weak var separatorView: UIView!
+    
     var model = TipCalcViewModel()
     
     override func viewDidLoad() {
@@ -41,6 +44,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         // also set up the initial bill (later will use storage defaults)
         model.billAmount = "$10.00"
+        
+        // apply the proper color theme to UI elements
+        let useDarkTheme = false // (later will use storage default)
+        setUITheme(useDarkTheme)
         
         // update the view
         refreshRates()
@@ -117,6 +124,24 @@ class ViewController: UIViewController, UITextFieldDelegate {
         totalField.text = model.totalAmount
     }
 
+    // MARK: UI theme setup
+    private func setUITheme( useDarkTheme: Bool ) {
+        // set up the VM to do the coloring for us:
+
+        // set up the screen elements that will be colored according to the theme
+        var elements = screenElements.map { ($0 as Colorable) }
+        elements.append(billAmountField)
+        // NOTE: there is no need to add the tipRateController (segmented control)
+        // This is because it inherits its coloring behavior from the main view
+        // However, the separator view is a UIView that has the opposite color of the main view
+        model.setupColoredElements(view, regularViews: elements, invertedViews: [separatorView])
+        
+        // get the color scheme from the current view as set up in IB
+        model.setTheme(ViewModelTheme.fromView(view))
+        
+        // color the UI according to the saved setting
+        model.updateColorScheme(useDarkTheme)
+    }
 }
 
 extension ViewController {

@@ -6,13 +6,28 @@
 //  Copyright © 2016 Michael L. Mehr. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 class TipCalcViewModel {
     private var model: TipCalculator
     private let fmt = NSNumberFormatter()
-    
+    private var foregroundColor: UIColor
+    private var backgroundColor: UIColor
+    private var mainView: UIView!
+    private var mainItems: [Colorable]
+    private var oppositeItems: [UIView]
     private var currentTip: Tip // this is maintains the current baseAmount as well as the tip and total at the default rate
+    
+    init(bill: Double = 0.0) {
+        // NOTE: it is safe to force unwrap the optional since the default model is consistent
+        // CONVERSE: if default model is inconsistent, the app will crash
+        model = TipCalculator(rates: [0.15, 0.20, 0.25], currentIndex: 0)!
+        currentTip = model.calculate(bill)
+        foregroundColor = UIColor.blackColor()
+        backgroundColor = UIColor.whiteColor()
+        mainItems = []
+        oppositeItems = []
+    }
     
     var defaultRateIndex: Int {
         get{
@@ -72,13 +87,6 @@ class TipCalcViewModel {
         return fmt.currencySymbol == input
     }
     
-    init(bill: Double = 0.0) {
-        // NOTE: it is safe to force unwrap the optional since the default model is consistent
-        // CONVERSE: if default model is inconsistent, the app will crash
-        model = TipCalculator(rates: [0.15, 0.20, 0.25], currentIndex: 0)!
-        currentTip = model.calculate(bill)
-    }
-    
     func getRates() -> [Double] {
         return model.rates
     }
@@ -112,6 +120,40 @@ class TipCalcViewModel {
         fmt.configureForCurrency()
         let result = fmt.numberFromString(input)?.doubleValue
         return result
+    }
+
+    // MARK: theme coloring
+    func setTheme(theme: ViewModelTheme) {
+        foregroundColor = theme.fgColor
+        backgroundColor = theme.bgColor
+    }
+    
+    func setupColoredElements(main: UIView, regularViews: [Colorable], invertedViews: [UIView]) {
+        mainView = main
+        // following code is needed due to bug in Xcode 7.2.1 due to ObjC bridging of NSArray
+//        mainItems = []
+//        for view in regularViews {
+//            if let cbl = view as? Colorable {
+//                mainItems.append(cbl)
+//            }
+//        }
+        mainItems = regularViews
+        oppositeItems = invertedViews
+    }
+    
+    func updateColorScheme(useDarkTheme: Bool = false) {
+        let foreColor = useDarkTheme ? backgroundColor : foregroundColor
+        let backColor = useDarkTheme ? foregroundColor : backgroundColor
+        mainView.tintColor = foreColor
+        mainView.backgroundColor = backColor
+        for var item in mainItems {
+            item.foreColor = foreColor
+            item.backColor = backColor
+        }
+        for item in oppositeItems {
+            item.backgroundColor = foreColor
+            item.tintColor = backColor
+        }
     }
 }
 
