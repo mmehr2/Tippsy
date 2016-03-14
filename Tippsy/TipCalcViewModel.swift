@@ -70,6 +70,11 @@ class TipCalcViewModel {
         }
     }
     
+    func totalAmountSplit(persons: Int) -> String {
+        let amount = currentTip.total / Double(persons)
+        return formatAsCurrency(amount)
+    }
+    
     var settings: Settings {
         get {
             return Settings(index: defaultRateIndex,
@@ -213,7 +218,7 @@ extension NSNumberFormatter {
         self.usesGroupingSeparator = !editable
         self.maximumFractionDigits = 2
         self.minimumFractionDigits = editable ? 0 : 2
-        self.roundingMode = .RoundHalfEven
+        self.roundingMode = .RoundHalfUp
     }
     
 }

@@ -13,6 +13,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var billAmountField: UITextField!
     @IBOutlet weak var tipField: UILabel!
     @IBOutlet weak var totalField: UILabel!
+    @IBOutlet weak var totalField2: UILabel!
     @IBOutlet weak var tipRateControl: UISegmentedControl!
     @IBOutlet weak var bottomLayoutConstraint: NSLayoutConstraint!
     
@@ -29,9 +30,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         // Do any additional setup after loading the view, typically from a nib.
         title = "Tippsy the Tip Calculator"
-        // BUG#1: this however is not visible - why?
-        // Solution#1 - embed in NavigationController; title then is visible.
-        //   BUG #2: This causes problems with the autolayout, where the field disappears under the title bar. We need a way to
         
         // this layout constraint controls an invisible spacer view that allows space for the keyboard
         bottomLayoutConstraint.constant = 0
@@ -129,6 +127,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         billAmountField.text = model.billAmount
         tipField.text = model.tipAmount
         totalField.text = model.totalAmount
+        totalField2.text = model.totalAmountSplit(2)
     }
 
     // MARK: UI theme setup
