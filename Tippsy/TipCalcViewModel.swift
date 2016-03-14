@@ -110,11 +110,11 @@ class TipCalcViewModel {
         */
         // first, check if the string is parseable as currency
         // if ok, then it passes
-        let parsed = parseCurrency(input)
+        let parsed = parseEditable(input)
         if parsed != nil {
             return true
         }
-        // if not, it must be equal to the currency symbol by itself in order to pass
+        // if not, it must be the entire currency symbol in order to pass
         return input == fmt.currencySymbol
     }
     
@@ -153,14 +153,14 @@ class TipCalcViewModel {
         return result
     }
     
-    func formatAsNumber(input: Double) -> String {
-        fmt.configureForNumeric()
+    func formatAsEditable(input: Double) -> String {
+        fmt.configureForCurrency(true)
         let result = fmt.stringFromNumber(input) ?? fmt.stringFromNumber(0.0)!
         return result
     }
     
-    func parseNumber(input: String) -> Double? {
-        fmt.configureForNumeric()
+    func parseEditable(input: String) -> Double? {
+        fmt.configureForCurrency(true)
         let result = fmt.numberFromString(input)?.doubleValue
         return result
     }
@@ -205,23 +205,14 @@ extension NSNumberFormatter {
         self.roundingMode = .RoundHalfEven
     }
     
-    func configureForCurrency() {
+    func configureForCurrency(editable: Bool = false) {
         // use a number formatter for currency conversion to/from string using current locale
+        // editable form has no grouping separator, and only displays fractions as needed
         self.numberStyle = .CurrencyStyle
-        self.alwaysShowsDecimalSeparator = true
-        self.usesGroupingSeparator = true
+        self.alwaysShowsDecimalSeparator = !editable
+        self.usesGroupingSeparator = !editable
         self.maximumFractionDigits = 2
-        self.minimumFractionDigits = 2
-        self.roundingMode = .RoundHalfEven
-    }
-    
-    func configureForNumeric() {
-        // use a number formatter for number conversion to/from string using current locale
-        self.numberStyle = .CurrencyStyle
-        self.alwaysShowsDecimalSeparator = true
-        self.usesGroupingSeparator = false
-        self.maximumFractionDigits = 2
-        self.minimumFractionDigits = 2
+        self.minimumFractionDigits = editable ? 0 : 2
         self.roundingMode = .RoundHalfEven
     }
     

@@ -51,6 +51,7 @@ class Storage {
         store.setDouble(settings.billAmount, forKey: StorageKey.BillAmount.rawValue)
         store.setDouble(settings.billStaleness, forKey: StorageKey.BillStaleness.rawValue)
         saveRates(settings.rates)
+        store.synchronize()
     }
     
     private func restoreRates( defaultRates: [Double] ) -> [Double] {

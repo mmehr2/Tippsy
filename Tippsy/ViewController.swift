@@ -72,6 +72,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func onEditingBillEnded(sender: AnyObject) {
+        // convert editing form (numeric) back to currency for normal display
+        let currentBill = billAmountField.text!
+        if let amount = model.parseEditable(currentBill) {
+            model.billAmount = model.formatAsCurrency(amount)
+        }
         refreshAmounts()
         storage.saveSettings(model.settings)
     }
@@ -81,7 +86,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         model.defaultRateIndex = currentRateIndex
         refreshCurrentRate()
         view.endEditing(true)
-        //storage.saveSettings(model.settings)
     }
 
     // MARK: TextFieldDelegate
@@ -97,8 +101,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     func textFieldDidBeginEditing(textField: UITextField) {
         // when editing, shut off display of thousands separator (only edit numeric part)
-        guard let text = textField.text, editable = model.parseCurrency(text) else {return}
-        textField.text = model.formatAsNumber(editable)
+        let currentBill = textField.text!
+        if let amount = model.parseCurrency(currentBill) {
+            textField.text = model.formatAsEditable(amount)
+        }
     }
     
     // MARK: refresh utilities
