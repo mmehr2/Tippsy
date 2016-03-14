@@ -10,6 +10,7 @@ import UIKit
 
 class TipCalcViewModel {
     private var model: TipCalculator
+    private var currentSettings: Settings
     private let fmt = NSNumberFormatter()
     private var foregroundColor: UIColor
     private var backgroundColor: UIColor
@@ -18,11 +19,12 @@ class TipCalcViewModel {
     private var oppositeItems: [UIView]
     private var currentTip: Tip // this is maintains the current baseAmount as well as the tip and total at the default rate
     
-    init(bill: Double = 0.0) {
+    init(settings s: Settings = Settings()) {
         // NOTE: it is safe to force unwrap the optional since the default model is consistent
         // CONVERSE: if default model is inconsistent, the app will crash
-        model = TipCalculator(rates: [0.15, 0.20, 0.25], currentIndex: 0)!
-        currentTip = model.calculate(bill)
+        model = TipCalculator(rates: s.rates, currentIndex: s.rateIndex)!
+        currentTip = model.calculate(s.billAmount)
+        currentSettings = s
         foregroundColor = UIColor.blackColor()
         backgroundColor = UIColor.whiteColor()
         mainItems = []
@@ -68,6 +70,25 @@ class TipCalcViewModel {
         }
     }
     
+    var settings: Settings {
+        get {
+            return Settings(index: defaultRateIndex,
+                rates: model.rates,
+                bill: currentTip.baseAmount,
+                billStaleness: currentSettings.billStaleness,
+                darkTheme: currentSettings.darkTheme)
+        }
+        set {
+            currentSettings = newValue
+            updateWithSettings(currentSettings)
+        }
+    }
+
+    private func updateWithSettings(sss: Settings) {
+        model = TipCalculator(rates: sss.rates, currentIndex: sss.rateIndex)!
+        currentTip = model.calculate(sss.billAmount)
+    }
+    
     func isAllowableForEditing(input: String) -> Bool  {
         /* DISCUSSION
         We actually want to prevent the case of a blank field when editing currency, since the
@@ -85,6 +106,7 @@ class TipCalcViewModel {
         }
         // if not, it must be equal to the currency symbol by itself in order to pass
         return fmt.currencySymbol == input
+//        return true
     }
     
     func getRates() -> [Double] {
@@ -130,13 +152,6 @@ class TipCalcViewModel {
     
     func setupColoredElements(main: UIView, regularViews: [Colorable], invertedViews: [UIView]) {
         mainView = main
-        // following code is needed due to bug in Xcode 7.2.1 due to ObjC bridging of NSArray
-//        mainItems = []
-//        for view in regularViews {
-//            if let cbl = view as? Colorable {
-//                mainItems.append(cbl)
-//            }
-//        }
         mainItems = regularViews
         oppositeItems = invertedViews
     }

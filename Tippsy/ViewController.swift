@@ -19,6 +19,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var screenElements: [UILabel]!
     @IBOutlet weak var separatorView: UIView!
     
+    var storage = Storage()
     var model = TipCalcViewModel()
     
     override func viewDidLoad() {
@@ -35,19 +36,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
         // this layout constraint controls an invisible spacer view that allows space for the keyboard
         bottomLayoutConstraint.constant = 0
 
-        // set some rates into the view model (later will use storage defaults)
-        let defaultRates = [0.15, 0.20, 0.22]
-        model.setRates(defaultRates)
-        
-        // set the default rate index (later will use storage defaults)
-        model.defaultRateIndex = 0
-        
-        // also set up the initial bill (later will use storage defaults)
-        model.billAmount = "$10.00"
-        
-        // apply the proper color theme to UI elements
-        let useDarkTheme = false // (later will use storage default)
-        setUITheme(useDarkTheme)
+        // restore settings as currently defined by storage object
+        let settings = storage.restoreSettings()
+        let since = storage.secondsSinceLastSave
+        setupModel(settings, secondsSinceLastSave: since)
         
         // update the view
         refreshRates()
@@ -81,12 +73,14 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func onEditingBillEnded(sender: AnyObject) {
         refreshAmounts()
+        storage.saveSettings(model.settings)
     }
     
     @IBAction func onRateChange(sender: AnyObject) {
         let currentRateIndex = tipRateControl.selectedSegmentIndex
         model.defaultRateIndex = currentRateIndex
         refreshCurrentRate()
+        storage.saveSettings(model.settings)
     }
 
     // MARK: TextFieldDelegate
@@ -141,6 +135,24 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         // color the UI according to the saved setting
         model.updateColorScheme(useDarkTheme)
+    }
+
+    // MARK: restore settings
+    private func setupModel( settings: Settings, secondsSinceLastSave: NSTimeInterval ) {
+        // set some rates into the view model
+        model.setRates(settings.rates)
+        
+        // set the default rate index
+        model.defaultRateIndex = settings.rateIndex
+        
+        // also set up the initial bill
+        // FEATURE: override bill with default if older than threshold
+        let billAmount = settings.getOverrideBillAmount(secondsSinceLastSave)
+        model.billAmount = model.formatAsCurrency(billAmount)
+        
+        // apply the proper color theme to UI elements
+        let useDarkTheme = settings.darkTheme
+        setUITheme(useDarkTheme)
     }
 }
 

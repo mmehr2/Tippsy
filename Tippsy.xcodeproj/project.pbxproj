@@ -9,7 +9,8 @@
 /* Begin PBXBuildFile section */
 		A68C589E1C8A8DAD00DD1ACD /* TipCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68C589D1C8A8DAD00DD1ACD /* TipCalculator.swift */; };
 		A68C58A01C8A941200DD1ACD /* TipCalcViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68C589F1C8A941200DD1ACD /* TipCalcViewModel.swift */; };
-		A6994DF81C92488900A40647 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = A6994DF71C92488900A40647 /* README.md */; };
+		A6994DFA1C9249B500A40647 /* PersistentStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6994DF91C9249B500A40647 /* PersistentStorage.swift */; };
+		A6994DFC1C92C2D100A40647 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6994DFB1C92C2D100A40647 /* Settings.swift */; };
 		A6D52F201C8B851B0080D6EC /* TipCalcViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68C589F1C8A941200DD1ACD /* TipCalcViewModel.swift */; };
 		A6D52F211C8B85210080D6EC /* TipCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68C589D1C8A8DAD00DD1ACD /* TipCalculator.swift */; };
 		A6D52F231C8B858F0080D6EC /* TipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D52F221C8B858F0080D6EC /* TipTests.swift */; };
@@ -47,6 +48,8 @@
 		A68C589D1C8A8DAD00DD1ACD /* TipCalculator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TipCalculator.swift; sourceTree = "<group>"; };
 		A68C589F1C8A941200DD1ACD /* TipCalcViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TipCalcViewModel.swift; sourceTree = "<group>"; };
 		A6994DF71C92488900A40647 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		A6994DF91C9249B500A40647 /* PersistentStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistentStorage.swift; sourceTree = "<group>"; };
+		A6994DFB1C92C2D100A40647 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		A6D52F221C8B858F0080D6EC /* TipTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TipTests.swift; sourceTree = "<group>"; };
 		A6D52F241C8B8C470080D6EC /* TipModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TipModelTests.swift; sourceTree = "<group>"; };
 		A6D52F281C8E76B30080D6EC /* Colorable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colorable.swift; sourceTree = "<group>"; };
@@ -115,10 +118,12 @@
 		A6E171B91C8A162F003C18D6 /* Tippsy */ = {
 			isa = PBXGroup;
 			children = (
-				A6D52F2B1C8E7A3B0080D6EC /* ViewModelTheme.swift */,
 				A6E171BA1C8A162F003C18D6 /* AppDelegate.swift */,
-				A6D52F281C8E76B30080D6EC /* Colorable.swift */,
 				A6E171BC1C8A162F003C18D6 /* ViewController.swift */,
+				A6994DF91C9249B500A40647 /* PersistentStorage.swift */,
+				A6994DFB1C92C2D100A40647 /* Settings.swift */,
+				A6D52F2B1C8E7A3B0080D6EC /* ViewModelTheme.swift */,
+				A6D52F281C8E76B30080D6EC /* Colorable.swift */,
 				A68C589F1C8A941200DD1ACD /* TipCalcViewModel.swift */,
 				A68C589D1C8A8DAD00DD1ACD /* TipCalculator.swift */,
 				A6E171BE1C8A162F003C18D6 /* Main.storyboard */,
@@ -280,11 +285,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6994DFA1C9249B500A40647 /* PersistentStorage.swift in Sources */,
 				A68C589E1C8A8DAD00DD1ACD /* TipCalculator.swift in Sources */,
 				A6D52F291C8E76B30080D6EC /* Colorable.swift in Sources */,
 				A68C58A01C8A941200DD1ACD /* TipCalcViewModel.swift in Sources */,
-				A6994DF81C92488900A40647 /* README.md in Sources */,
 				A6E171BD1C8A162F003C18D6 /* ViewController.swift in Sources */,
+				A6994DFC1C92C2D100A40647 /* Settings.swift in Sources */,
 				A6D52F2C1C8E7A3B0080D6EC /* ViewModelTheme.swift in Sources */,
 				A6E171BB1C8A162F003C18D6 /* AppDelegate.swift in Sources */,
 			);
