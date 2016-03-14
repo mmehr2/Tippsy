@@ -63,7 +63,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" text="$100.00" placeholder="Bill amount" textAlignment="right" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Dfj-xQ-TJe">
-                                <rect key="frame" x="369" y="44" width="211" height="55"/>
+                                <rect key="frame" x="20" y="44" width="560" height="55"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-UltraLight" family="Helvetica Neue" pointSize="48"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="decimalPad"/>
                                 <connections>
@@ -97,6 +97,7 @@
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="t0j-YM-fUM" secondAttribute="bottom" constant="8" symbolic="YES" id="jx7-zu-7N0"/>
                             <constraint firstItem="fhr-s4-H5Q" firstAttribute="baseline" secondItem="5Fn-wR-uzs" secondAttribute="baseline" id="mY3-Pw-UN2"/>
                             <constraint firstItem="t0j-YM-fUM" firstAttribute="top" secondItem="aGB-e8-qdZ" secondAttribute="bottom" multiplier="6:2" id="oMd-Jx-T8O"/>
+                            <constraint firstItem="Dfj-xQ-TJe" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="oST-iI-qBe"/>
                             <constraint firstItem="fhr-s4-H5Q" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="uap-Ce-92k"/>
                             <constraint firstAttribute="trailing" secondItem="pSq-ac-63Y" secondAttribute="trailing" constant="20" symbolic="YES" id="v3r-nu-G9m"/>
                             <constraint firstItem="t0j-YM-fUM" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" symbolic="YES" id="w2F-OS-Tfm"/>
