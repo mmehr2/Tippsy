@@ -95,8 +95,18 @@ class TipCalcViewModel {
         ViewModel can only convert from currency output back to double.
         
         Alternatively, we could implement changes during editing mode such that all strings are allowed, but then we have the issue of any call to refreshAmounts() (such as from changing the rate while editing) can cause it to redisplay the current amount as edited.
+        DISCOVERED BUGS WITH THIS APPROACH:
+        If the user enters an amount that introduces a thousands separator, and then edits the amount to delete a few digits, the result is NOT parseable, and thus is disallowed.
+        This cannot be corrected in any fashion, due to persisting the current bill amount. One must wait for the 10-minute clear and refuse to enter any more amounts using the separator.
         
-        Is this really a problem? There is probably some better way I'm missing at the moment.
+        The cure seems to be to implement the alternative mentioned above, and only display as a number in editing mode, testing only for its validity as a number, and not as a currency value. Perhaps if we just test the amount as a value? No, we are passed a string. Hmmm...
+        
+        Consider the sequence during editing:
+        $1,234.56 <del>
+        $1,234.5 <del>
+        $1,234. <del>
+        $1,234 <del>
+        $1,23 <== THIS IS NOT A VALID CURRENCY INPUT
         */
         // first, check if the string is parseable as currency
         // if ok, then it passes
@@ -105,8 +115,7 @@ class TipCalcViewModel {
             return true
         }
         // if not, it must be equal to the currency symbol by itself in order to pass
-        return fmt.currencySymbol == input
-//        return true
+        return input == fmt.currencySymbol
     }
     
     func getRates() -> [Double] {
@@ -140,6 +149,18 @@ class TipCalcViewModel {
     
     func parseCurrency(input: String) -> Double? {
         fmt.configureForCurrency()
+        let result = fmt.numberFromString(input)?.doubleValue
+        return result
+    }
+    
+    func formatAsNumber(input: Double) -> String {
+        fmt.configureForNumeric()
+        let result = fmt.stringFromNumber(input) ?? fmt.stringFromNumber(0.0)!
+        return result
+    }
+    
+    func parseNumber(input: String) -> Double? {
+        fmt.configureForNumeric()
         let result = fmt.numberFromString(input)?.doubleValue
         return result
     }
@@ -178,6 +199,7 @@ extension NSNumberFormatter {
         // use a number formatter for percent conversion to/from string using current locale
         self.numberStyle = .PercentStyle
         self.alwaysShowsDecimalSeparator = false
+        self.usesGroupingSeparator = false
         self.maximumFractionDigits = 2
         self.minimumFractionDigits = 0
         self.roundingMode = .RoundHalfEven
@@ -187,6 +209,17 @@ extension NSNumberFormatter {
         // use a number formatter for currency conversion to/from string using current locale
         self.numberStyle = .CurrencyStyle
         self.alwaysShowsDecimalSeparator = true
+        self.usesGroupingSeparator = true
+        self.maximumFractionDigits = 2
+        self.minimumFractionDigits = 2
+        self.roundingMode = .RoundHalfEven
+    }
+    
+    func configureForNumeric() {
+        // use a number formatter for number conversion to/from string using current locale
+        self.numberStyle = .CurrencyStyle
+        self.alwaysShowsDecimalSeparator = true
+        self.usesGroupingSeparator = false
         self.maximumFractionDigits = 2
         self.minimumFractionDigits = 2
         self.roundingMode = .RoundHalfEven

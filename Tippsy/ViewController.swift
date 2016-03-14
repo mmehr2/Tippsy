@@ -80,7 +80,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         let currentRateIndex = tipRateControl.selectedSegmentIndex
         model.defaultRateIndex = currentRateIndex
         refreshCurrentRate()
-        storage.saveSettings(model.settings)
+        view.endEditing(true)
+        //storage.saveSettings(model.settings)
     }
 
     // MARK: TextFieldDelegate
@@ -92,6 +93,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
             return model.isAllowableForEditing(newtext)
         }
         return true
+    }
+    
+    func textFieldDidBeginEditing(textField: UITextField) {
+        // when editing, shut off display of thousands separator (only edit numeric part)
+        guard let text = textField.text, editable = model.parseCurrency(text) else {return}
+        textField.text = model.formatAsNumber(editable)
     }
     
     // MARK: refresh utilities
